@@ -1,5 +1,71 @@
 ---
 # tasks file for swygue.coreos-virt-install-iso#!/usr/bin/env ansible-playbook
+- name: check if  Web Server Directory Exists
+  stat:
+    path: "{{ webserver_directory }}"
+  register: webserver_dir
+
+- name: include podman start/deploy tasks
+  include: stop_podman_webserver.yml
+  when: webserver_dir.stat.exists == True
+
+- name: Recursively remove web directory 
+  file:
+    path: "{{ webserver_directory }}"
+    state: absent
+  when: webserver_dir.stat.exists == True
+
+- name: Create a web diretory for container data 
+  file:
+    path: "{{ webserver_directory }}"
+    state: directory
+    mode: '0755'
+  when: webserver_dir.stat.exists == False
+
+- name: Create a images directory
+  file:
+    path: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images"
+    state: directory
+    mode: '0755'
+  when: webserver_dir.stat.exists == False
+
+- name: Create ignition directory
+  file:
+    path: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions"
+    state: directory
+    mode: '0755'
+  when: webserver_dir.stat.exists == False
+
+- name: copy over ignition files to webserver directory
+  copy:
+  src: "{{ ignition_files_dir }}/{{ item }}.ign"
+  dest: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions/{{ item }}.ign"
+  with_items:
+  - master
+  - worker
+  - bootstrap
+
+- name: copy over kernel to web directory 
+  copy:
+  src: "{{ downloaded_files_dir }}/{{ coreos_installer_kernel }}"
+  dest: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_installer_kernel }}"
+
+- name: copy over initramfs.img to web directory 
+  copy:
+  src: "{{ downloaded_files_dir }}/{{ coreos_installer_initramfs }}"
+  dest: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_installer_initramfs }}"
+
+- name: copy over coreos_metal_bios to web directory 
+  copy:
+  src: "{{ downloaded_files_dir }}/{{ coreos_metal_bios }}"
+  dest: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_metal_bios }}"
+
+- name: Apply new SELinux file context ignition directory
+  command: restorecon -RFv "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions/"
+
+- name: Apply new SELinux file context to images directory
+  command: restorecon -RFv "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/"
+
 - name: setup configuration files for podman deployment if not deployed
   copy:
     src: files/webserver
@@ -16,7 +82,7 @@
   when: webserver_status.rc != 0 and webserver_deployed.rc != 0
 
 - name: run podman webserver if not deployed
-  command: podman run -d -v {{ downloaded_files_dir}}:/var/www/html/pub:Z -p 8080:80 --name={{ podman_webserver }} webserver
+  command: podman run -d -v {{ webserver_directory }}:/var/www/html/pub:Z -p 8080:80 --name={{ podman_webserver }} webserver
   become: yes
   args:
     warn: false

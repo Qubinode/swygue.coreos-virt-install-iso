@@ -10,7 +10,6 @@
     owner: "{{ admin_user }}"
   with_items:
     - "{{ coreos_iso_extract_dir }}"
-    - "{{ downloaded_files_dir }}"
     - "{{ ignition_files_dir }}"
 
 - name: download required files from openshift mirror
@@ -18,8 +17,9 @@
     url: "{{ openshift_mirror }}/{{ item }}"
     dest: "{{ downloaded_files_dir }}/{{ item }}"
   with_items:
-    - "{{ coreos_metal_bios }}"
-    - "{{ coreos_installer_iso }}"
+    - "{{ coreos_installer_kernel }}"
+    - "{{ coreos_installer_initramfs }}"
+    - "{{ coreos_metal_bios }}"   
 
 - name: copy over ignition files to webserver pub directory
   copy:
@@ -30,20 +30,20 @@
     - worker
     - bootstrap
 
-- name: extract kernel and ramdisk from coreos cd
-  iso_extract:
-    image: "{{ downloaded_files_dir }}/{{ coreos_installer_iso }}"
-    dest: /tmp/coreos/
-    files:
-      - images/efiboot.img
-      - images/initramfs.img
-      - images/vmlinuz
-  become: yes
+- name: copy over kernel to install directory 
+  copy:
+    src: "{{ downloaded_files_dir }}/{{ coreos_installer_kernel }}"
+    dest: "{{ coreos_iso_extract_dir }}/vmlinuz"
+
+- name: copy over kernel to install directory 
+  copy:
+    src: "{{ downloaded_files_dir }}/{{ coreos_installer_initramfs }}"
+    dest: "{{ coreos_iso_extract_dir }}/initramfs.img"
 
 - name: copy treeinfo to /tmp/coreos
   copy:
     src: files/treeinfo
-    dest: /tmp/coreos/.treeinfo
+    dest: "{{ coreos_iso_extract_dir }}/.treeinfo"
 
 - name: include podman start/deploy tasks
   include: start_podman_webserver.yml
