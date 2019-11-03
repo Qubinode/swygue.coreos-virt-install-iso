@@ -4,15 +4,15 @@ ocp4_version: 4.2.0
 ocp4_dependencies_version: 4.2
 ocp4_release: latest
 project_dir: /tmp
+downloaded_files_dir: /tmp
 admin_user: ""
 coreos_installer_kernel: "rhcos-{{ ocp4_version }}-x86_64-installer-kernel"
-coreos_installer_initramfs: "rhcos-{{ ocp4_version }}-installinitramfser-.img"
+coreos_installer_initramfs: "rhcos-{{ ocp4_version }}-x86_64-installer-initramfs.img"
 coreos_iso_extract_dir: "{{ project_dir }}/rhcos-install/" # do not change this, iso_extract role fails when using variable so this is hardcoded for this module
-coreos_metal_bios: rhcos-{{ ocp4_version }}-x86_64-metal-bios.raw.gz
+coreos_metal_bios: "rhcos-{{ ocp4_version }}-x86_64-metal-bios.raw.gz"
 coreos_tmp_dir: /tmp/build_coreos_container
-downloaded_files_dir: ""
 ignition_files_dir: ""
-openshift_mirror:  https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp4_dependencies_version }}/{{ ocp4_release }}/
+openshift_mirror:  "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp4_dependencies_version }}/{{ ocp4_release }}"
 
 podman_webserver: ignwebserver
 webserver_directory: /opt/qubinode_webserver

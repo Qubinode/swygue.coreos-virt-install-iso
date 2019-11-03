@@ -3,6 +3,57 @@
 - name: include podman webserver checks
   include: stop_podman_webserver.yml
 
+- name: check if "{{ coreos_iso_extract_dir }}" exists 
+  stat:
+    path: "{{ coreos_iso_extract_dir }}"
+  register: coreos_extract_dir
+
+- name: Recursively remove "{{ coreos_iso_extract_dir }}"
+  file:
+    path: "{{ coreos_iso_extract_dir }}"
+    state: absent
+  when: coreos_extract_dir.stat.exists == True
+
+- name: check if "{{ downloaded_files_dir }}/{{ coreos_installer_kernel }}" exists 
+  stat:
+    path: "{{ downloaded_files_dir }}/{{ coreos_installer_kernel }}"
+  register: coreos_kernel_file
+
+- name: check if "{{ downloaded_files_dir }}/{{ coreos_installer_initramfs }}" exists 
+  stat:
+    path: "{{ downloaded_files_dir }}/{{ coreos_installer_initramfs }}"
+  register: coreos_initramfs_file
+
+- name: Recursively remove "{{ downloaded_files_dir }}/{{ coreos_installer_kernel }}"
+  file:
+    path: "{{ downloaded_files_dir }}/{{ coreos_installer_kernel }}"
+    state: absent
+  when: coreos_kernel_file.stat.exists == True
+
+- name: Recursively remove "{{ downloaded_files_dir }}/{{ coreos_installer_initramfs }}"
+  file:
+    path: "{{ downloaded_files_dir }}/{{ coreos_installer_initramfs }}"
+    state: absent
+  when: coreos_initramfs_file.stat.exists == True
+
+- name: check if "{{ downloaded_files_dir }}/{{ coreos_metal_bios }}" exists 
+  stat:
+    path: "{{ downloaded_files_dir }}/{{ coreos_metal_bios }}"
+  register: coreos_metal_bios_file
+
+- name: Recursively remove "{{ downloaded_files_dir }}/{{ coreos_metal_bios }}"
+  file:
+    path: "{{ downloaded_files_dir }}/{{ coreos_metal_bios }}"
+    state: absent
+  when: coreos_metal_bios_file.stat.exists == True
+
+- name: Create "{{ coreos_iso_extract_dir }}" 
+  file:
+    path: "{{ coreos_iso_extract_dir }}"
+    state: directoryls
+    mode: '0755'
+  when: coreos_extract_dir.stat.exists == False
+
 - name: ensure required directories exist
   file:
     path: "{{ item }}"

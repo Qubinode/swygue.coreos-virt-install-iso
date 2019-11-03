@@ -15,26 +15,30 @@
     state: absent
   when: webserver_dir.stat.exists == True
 
-- name: Create a web diretory for container data 
+- name: Create a web directory for container data 
   file:
     path: "{{ webserver_directory }}"
     state: directory
-    mode: '0755'
+    owner: "{{ admin_user }}"
   when: webserver_dir.stat.exists == False
+
+- name: Create a "{{ ocp4_dependencies_version }}" directory
+  file:
+    path: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}"
+    state: directory
+    owner: "{{ admin_user }}"
 
 - name: Create a images directory
   file:
     path: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images"
     state: directory
-    mode: '0755'
-  when: webserver_dir.stat.exists == False
+    owner: "{{ admin_user }}"
 
 - name: Create ignition directory
   file:
     path: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions"
     state: directory
-    mode: '0755'
-  when: webserver_dir.stat.exists == False
+    owner: "{{ admin_user }}"
 
 - name: copy over ignition files to webserver directory
   copy:
