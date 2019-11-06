@@ -12,6 +12,7 @@ coreos_iso_extract_dir: "{{ project_dir }}/rhcos-install/" # do not change this,
 coreos_metal_bios: "rhcos-{{ ocp4_version }}-x86_64-metal-bios.raw.gz"
 coreos_tmp_dir: /tmp/build_coreos_container
 ignition_files_dir: ""
+dest_ignitions_web_directory: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions/"
 openshift_mirror:  "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp4_dependencies_version }}/{{ ocp4_release }}"
 
 podman_webserver: ignwebserver

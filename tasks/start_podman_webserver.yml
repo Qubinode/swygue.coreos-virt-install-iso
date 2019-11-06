@@ -36,33 +36,25 @@
 
 - name: Create ignition directory
   file:
-    path: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions"
+    path: "{{ dest_ignitions_web_directory }}"
     state: directory
     owner: "{{ admin_user }}"
 
 - name: copy over ignition files to webserver directory
-  copy:
-  src: "{{ ignition_files_dir }}/{{ item }}.ign"
-  dest: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions/{{ item }}.ign"
+  command: "cp {{ ignition_files_dir }}/{{ item }}.ign {{ dest_ignitions_web_directory }}/{{ item }}.ign"
   with_items:
   - master
   - worker
   - bootstrap
 
 - name: copy over kernel to web directory 
-  copy:
-  src: "{{ downloaded_files_dir }}/{{ coreos_installer_kernel }}"
-  dest: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_installer_kernel }}"
+  command: "cp {{ downloaded_files_dir }}/{{ coreos_installer_kernel }} {{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_installer_kernel }}"
 
 - name: copy over initramfs.img to web directory 
-  copy:
-  src: "{{ downloaded_files_dir }}/{{ coreos_installer_initramfs }}"
-  dest: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_installer_initramfs }}"
+  command: "cp {{ downloaded_files_dir }}/{{ coreos_installer_initramfs }} {{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_installer_initramfs }}"
 
 - name: copy over coreos_metal_bios to web directory 
-  copy:
-  src: "{{ downloaded_files_dir }}/{{ coreos_metal_bios }}"
-  dest: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_metal_bios }}"
+  command: "cp {{ downloaded_files_dir }}/{{ coreos_metal_bios }} {{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_metal_bios }}"
 
 - name: Apply new SELinux file context ignition directory
   command: restorecon -RFv "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions/"

@@ -50,7 +50,7 @@
 - name: Create "{{ coreos_iso_extract_dir }}" 
   file:
     path: "{{ coreos_iso_extract_dir }}"
-    state: directoryls
+    state: directory
     mode: '0755'
   when: coreos_extract_dir.stat.exists == False
 
