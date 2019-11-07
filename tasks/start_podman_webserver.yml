@@ -5,9 +5,44 @@
     path: "{{ webserver_directory }}"
   register: webserver_dir
 
-- name: include podman start/deploy tasks
-  include: stop_podman_webserver.yml
-  when: webserver_dir.stat.exists == True
+- name: check if podman webserver is Running 
+  shell: podman ps | grep {{ podman_webserver }}
+  become: yes
+  failed_when: false
+  register: webserver_running
+
+
+- name: check if podman webserver is Exists
+  shell: podman ps -a | grep {{ podman_webserver }}
+  become: yes
+  failed_when: false
+  changed_when: webserver_status.rc != 0
+  register: webserver_status
+
+- name: debug webserver_status
+  debug: var=webserver_status
+
+- name: check if podman webserver is already deployed but stopped
+  shell: podman ps -a | grep {{ podman_webserver }} | grep Exited
+  become: yes
+  failed_when: false
+  changed_when: webserver_deployed != 0
+  register: webserver_deployed
+
+- name: debug webserver_deployed
+  debug: var=webserver_deployed 
+
+- name: stop podman webserver if it's running
+  shell: podman stop {{ podman_webserver }}
+  become: yes
+  failed_when: false
+  when: webserver_running.rc == 0
+
+- name: remove podman webserver
+  shell: podman rm {{ podman_webserver }}
+  become: yes
+  failed_when: false
+  when: webserver_status.rc == 0
 
 - name: Recursively remove web directory 
   file:
