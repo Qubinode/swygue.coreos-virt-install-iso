@@ -1,15 +1,15 @@
 ---
 # defaults file for swygue.coreos-virt-install-isocluster_name: ocp4
-ocp4_version: 4.2.0
+ocp4_image_version: 4.2.0
 ocp4_dependencies_version: 4.2
 ocp4_release: latest
 project_dir: /tmp
 downloaded_files_dir: /tmp
 admin_user: ""
-coreos_installer_kernel: "rhcos-{{ ocp4_version }}-x86_64-installer-kernel"
-coreos_installer_initramfs: "rhcos-{{ ocp4_version }}-x86_64-installer-initramfs.img"
+coreos_installer_kernel: "rhcos-{{ ocp4_image_version }}-x86_64-installer-kernel"
+coreos_installer_initramfs: "rhcos-{{ ocp4_image_version }}-x86_64-installer-initramfs.img"
 coreos_iso_extract_dir: "{{ project_dir }}/rhcos-install/" # do not change this, iso_extract role fails when using variable so this is hardcoded for this module
-coreos_metal_bios: "rhcos-{{ ocp4_version }}-x86_64-metal-bios.raw.gz"
+coreos_metal_bios: "rhcos-{{ ocp4_image_version }}-x86_64-metal-bios.raw.gz"
 coreos_tmp_dir: /tmp/build_coreos_container
 ignition_files_dir: ""
 dest_ignitions_web_directory: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions/"
@@ -21,23 +21,23 @@ kvm_host_ip: ""
 libvirt_network_name: ""
 
 # VM variables
-kvm_host_libvirt_dir: /var/lib/libvirt/images 
+kvm_host_libvirt_dir: /var/lib/libvirt/images
 nat_network_name: "ocp4"
 
 
 vm_type: bootstrap # Types: bootstrap, master, worker
 vm_name: bootstrap-0 # Types: bootstrap-0, master-0 <-> master-2, compute-0 <-> compute-1 +n
-coreos_vm_hd_size: 120G # Size of boot strap vm 
+coreos_vm_hd_size: 120G # Size of boot strap vm
 coreos_vm_memory_size: 16192
 
 # Uncomment to deploy masters
 #vm_type: master # Types: bootstrap, master, worker
 #vm_name: master- # Types: bootstrap-0, master-0 <-> master-2, compute-0 <-> compute-1 +n
-#coreos_vm_hd_size: 120G # Size of boot strap vm 
+#coreos_vm_hd_size: 120G # Size of boot strap vm
 #coreos_vm_memory_size: 16192
 
 # Uncomment to deploy compute nodes
 #vm_type: worker # Types: bootstrap, master, worker
 #vm_name: compute- # Types: bootstrap-0, master-0 <-> master-2, compute-0 <-> compute-1 +n
-#coreos_vm_hd_size: 120G # Size of boot strap vm 
+#coreos_vm_hd_size: 120G # Size of boot strap vm
 #coreos_vm_memory_size: 16192

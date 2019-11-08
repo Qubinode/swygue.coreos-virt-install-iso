@@ -19,7 +19,7 @@
   delay: 1
   retries: 5
   when: vm_type == "bootstrap"
-  
+
 - name: deploy virt-install {{ vm_name }} template
   template:
     src: virt-install-coreos.j2
@@ -36,7 +36,7 @@
   delay: 1
   retries: 5
   when: vm_type == "master"
-  
+
 - name: deploy virt-install {{ vm_name }} template
   template:
     src: virt-install-coreos.j2
@@ -52,5 +52,4 @@
   until: deploy_vm_instance.rc == 0
   delay: 1
   retries: 5
-  when: vm_type == "compute"
-  
+  when: vm_type == "worker"
