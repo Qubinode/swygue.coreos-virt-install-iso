@@ -43,7 +43,7 @@
     dest: "{{ coreos_iso_extract_dir }}/{{ vm_name }}.sh"
     mode: "u=rwx,g=rx,o=rx"
     owner: "{{ admin_user }}"
-  when: vm_type == "compute"
+  when: vm_type == "worker"
 
 - name: deploy vm instance {{ vm_name }}
   shell:  "{{ coreos_iso_extract_dir }}/{{ vm_name }}.sh"
