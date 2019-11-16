@@ -19,6 +19,7 @@ podman_webserver: ignwebserver
 webserver_directory: /opt/qubinode_webserver
 kvm_host_ip: ""
 libvirt_network_name: ""
+idm_server_ip: ""
 
 # VM variables
 kvm_host_libvirt_dir: /var/lib/libvirt/images
@@ -29,15 +30,18 @@ vm_type: bootstrap # Types: bootstrap, master, worker
 vm_name: bootstrap-0 # Types: bootstrap-0, master-0 <-> master-2, compute-0 <-> compute-1 +n
 coreos_vm_hd_size: 120G # Size of boot strap vm
 coreos_vm_memory_size: 16192
+coreos_host_ip: 192.168.50.100
 
 # Uncomment to deploy masters
 #vm_type: master # Types: bootstrap, master, worker
 #vm_name: master- # Types: bootstrap-0, master-0 <-> master-2, compute-0 <-> compute-1 +n
 #coreos_vm_hd_size: 120G # Size of boot strap vm
 #coreos_vm_memory_size: 16192
+#coreos_host_ip:
 
 # Uncomment to deploy compute nodes
 #vm_type: worker # Types: bootstrap, master, worker
 #vm_name: compute- # Types: bootstrap-0, master-0 <-> master-2, compute-0 <-> compute-1 +n
 #coreos_vm_hd_size: 120G # Size of boot strap vm
 #coreos_vm_memory_size: 16192
+#coreos_host_ip:
