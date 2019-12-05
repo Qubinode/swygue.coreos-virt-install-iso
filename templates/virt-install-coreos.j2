@@ -5,7 +5,7 @@ args+='coreos.inst=yes '
 args+='coreos.inst.install_dev=vda '
 args+='coreos.inst.image_url=http://{{ kvm_host_ip }}:8080/pub/{{ ocp4_dependencies_version }}/images/{{ coreos_metal_bios }} '
 args+='coreos.inst.ignition_url=http://{{ kvm_host_ip }}:8080/pub/{{ ocp4_dependencies_version }}/ignitions/{{ vm_type }}.ign '
-args+='ip={{ coreos_host_ip }}::{{ libvirt_host_networks[0].gateway }}:{{ libvirt_host_networks[0].mask }}:{{ vm_name }}.{{ public_domain }}:ens3:none nameserver={{ idm_server_ip }} '
+args+='ip={{ coreos_host_ip }}::{{ libvirt_host_networks[0].gateway }}:{{ libvirt_host_networks[0].mask }}:{{ vm_name }}.{{ libvirt_host_networks[0].external_domain }}:ens3:none nameserver={{ idm_server_ip }} '
 args+='rd.neednet=1'
 
 # {{ vm_type }} Node
