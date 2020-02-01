@@ -5,7 +5,7 @@
     path: "{{ webserver_directory }}"
   register: webserver_dir
 
-- name: check if podman webserver is Running 
+- name: check if podman webserver is Running
   shell: podman ps | grep {{ podman_webserver }}
   become: yes
   failed_when: false
@@ -30,7 +30,7 @@
   register: webserver_deployed
 
 - name: debug webserver_deployed
-  debug: var=webserver_deployed 
+  debug: var=webserver_deployed
 
 - name: stop podman webserver if it's running
   shell: podman stop {{ podman_webserver }}
@@ -44,13 +44,13 @@
   failed_when: false
   when: webserver_status.rc == 0
 
-- name: Recursively remove web directory 
+- name: Recursively remove web directory
   file:
     path: "{{ webserver_directory }}"
     state: absent
   when: webserver_dir.stat.exists == True
 
-- name: Create a web directory for container data 
+- name: Create a web directory for container data
   file:
     path: "{{ webserver_directory }}"
     state: directory
@@ -82,13 +82,13 @@
   - worker
   - bootstrap
 
-- name: copy over kernel to web directory 
+- name: copy over kernel to web directory
   command: "cp {{ downloaded_files_dir }}/{{ coreos_installer_kernel }} {{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_installer_kernel }}"
 
-- name: copy over initramfs.img to web directory 
+- name: copy over initramfs.img to web directory
   command: "cp {{ downloaded_files_dir }}/{{ coreos_installer_initramfs }} {{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_installer_initramfs }}"
 
-- name: copy over coreos_metal_bios to web directory 
+- name: copy over coreos_metal_bios to web directory
   command: "cp {{ downloaded_files_dir }}/{{ coreos_metal_bios }} {{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/{{ coreos_metal_bios }}"
 
 - name: Apply new SELinux file context ignition directory
@@ -96,6 +96,9 @@
 
 - name: Apply new SELinux file context to images directory
   command: restorecon -RFv "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/images/"
+
+- name: Set permissions to 775 for all files
+  command: chmod 775 -R "{{ webserver_directory }}/{{ ocp4_dependencies_version }}"
 
 - name: setup configuration files for podman deployment if not deployed
   copy:
