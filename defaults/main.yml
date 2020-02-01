@@ -9,7 +9,7 @@ admin_user: ""
 coreos_installer_kernel: "rhcos-{{ ocp4_image_version }}-x86_64-installer-kernel"
 coreos_installer_initramfs: "rhcos-{{ ocp4_image_version }}-x86_64-installer-initramfs.img"
 coreos_iso_extract_dir: "{{ project_dir }}/rhcos-install/" # do not change this, iso_extract role fails when using variable so this is hardcoded for this module
-coreos_metal_bios: "rhcos-{{ ocp4_image_version }}-x86_64-metal-bios.raw.gz"
+coreos_metal_bios: "rhcos-{{ ocp4_image_version }}-x86_64-metal.raw.gz"
 coreos_tmp_dir: /tmp/build_coreos_container
 ignition_files_dir: ""
 dest_ignitions_web_directory: "{{ webserver_directory }}/{{ ocp4_dependencies_version }}/ignitions/"
